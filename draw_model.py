@@ -26,7 +26,7 @@ class DRAWModel(nn.Module):
 
         # Stores the generated image for each time step.
         self.cs = [0] * self.T
-        
+
         # To store appropriate values used for calculating the latent loss (KL-Divergence loss)
         self.logsigmas = [0] * self.T
         self.sigmas = [0] * self.T
@@ -126,7 +126,7 @@ class DRAWModel(nn.Module):
         # Equation 2.
         log_sigma = self.fc_sigma(h_enc)
         sigma = torch.exp(log_sigma)
-        
+
         z = mu + e * sigma
 
         return z, mu, log_sigma, sigma
@@ -148,8 +148,8 @@ class DRAWModel(nn.Module):
         return self.filterbank(gx, gy, sigma_2, delta, N), gamma
 
     def filterbank(self, gx, gy, sigma_2, delta, N, epsilon=1e-8):
-        grid_i = torch.arange(start=0.0, end=N, device=self.device, requires_grad=True,).view(1, -1)
-        
+        grid_i = torch.arange(start=1.0, end=N+1, device=self.device, requires_grad=True,).view(1, -1)
+
         # Equation 19.
         mu_x = gx + (grid_i - N / 2 - 0.5) * delta
         # Equation 20.
@@ -172,7 +172,7 @@ class DRAWModel(nn.Module):
         if self.channel == 3:
             Fx = Fx.view(Fx.size(0), 1, Fx.size(1), Fx.size(2))
             Fx = Fx.repeat(1, 3, 1, 1)
-            
+
             Fy = Fy.view(Fy.size(0), 1, Fy.size(1), Fy.size(2))
             Fy = Fy.repeat(1, 3, 1, 1)
 
